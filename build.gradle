@@ -33,10 +33,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-//	// MySQLドライバー
+	// MySQLドライバー
     runtimeOnly 'com.mysql:mysql-connector-j'
-//
-//	// MyBatis
+
+	// MyBatis
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
 
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
