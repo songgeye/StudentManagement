@@ -1,6 +1,5 @@
-package raisetech.StudentManagement;
+package raisetech.StudentManagement.data;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class Student {
 
-  private int id;
+  private String id;
   private String name;
   private String kanaName;
   private String nickname;
@@ -17,5 +16,4 @@ public class Student {
   private int age;
   private String gender;
 
-  private List<StudentCourse> courses;
 }
