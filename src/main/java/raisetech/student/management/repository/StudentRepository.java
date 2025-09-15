@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import raisetech.student.management.data.Student;
-import raisetech.student.management.data.StudentsCourse;
+import raisetech.student.management.data.StudentCourse;
 
 /**
  * 受講生情報を扱うリポジトリ
@@ -42,5 +42,5 @@ public interface StudentRepository {
       @Result(property = "courseStartAt", column = "course_start_at"),
       @Result(property = "courseEndAt", column = "course_end_at")
   })
-  List<StudentsCourse> searchStudentCourses();
+  List<StudentCourse> searchStudentCourses();
 }

@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import raisetech.student.management.data.Student;
-import raisetech.student.management.data.StudentsCourse;
+import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.repository.StudentRepository;
 
 @Service
@@ -33,9 +33,9 @@ public class StudentService {
         .collect(Collectors.toList());
   }
 
-  public List<StudentsCourse> searchStudentsCourseList() {
+  public List<StudentCourse> searchStudentsCourseList() {
     // 「Java基礎コース」のコース情報のみ抽出し、リストをコントローラに返す
-    List<StudentsCourse> allCourses = repository.searchStudentCourses();
+    List<StudentCourse> allCourses = repository.searchStudentCourses();
 
     if (allCourses == null) {
       return Collections.emptyList();
@@ -52,8 +52,8 @@ public class StudentService {
     return allStudents != null ? allStudents : Collections.emptyList();
   }
 
-  public List<StudentsCourse> searchAllStudentsCourses() {
-    List<StudentsCourse> allCourses = repository.searchStudentCourses();
+  public List<StudentCourse> searchAllStudentsCourses() {
+    List<StudentCourse> allCourses = repository.searchStudentCourses();
     return allCourses != null ? allCourses : Collections.emptyList();
   }
 }
