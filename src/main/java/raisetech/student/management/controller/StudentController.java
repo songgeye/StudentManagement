@@ -43,7 +43,7 @@ public class StudentController {
       studentDetail.setStudent(student);
       for (StudentCourse studentCourse : studentCourses) {
         if (student.getId().equals(studentCourse.getStudentId())) {
-
+          // 処理内容を記載
         }
       }
     }
