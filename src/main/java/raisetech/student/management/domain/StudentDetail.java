@@ -11,5 +11,5 @@ import raisetech.student.management.data.StudentCourse;
 public class StudentDetail {
 
   private Student student;
-  private List<StudentCourse> studentCourse;
+  private List<StudentCourse> studentCourse; // 1人の受講生が複数コースを受講する可能性があるため
 }
