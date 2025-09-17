@@ -27,22 +27,22 @@ public class StudentController {
     List<Student> students = service.searchStudentList();
     List<StudentCourse> studentCourses = service.searchStudentsCourseList();
 
-<<<<<<< HEAD
-    List<StudentDetail> studentDetails = new ArrayList<>();
-    for (Student student : students) {
-      StudentDetail studentDetail = new StudentDetail();
-      studentDetail.setStudent(student);
-      for (StudentCourse studentCourse : studentCourses) {
-        if (student.getId().equals(studentCourse.getStudentId())) {
-          // 処理内容を記載
-        }
-      }
-    }
-    return
-=======
-    return converter.convertStudentDetails(students, studentCourses);
->>>>>>> 207bceb (feat: Read処理のConverter部分実装)
-  }
+// <<<<<<< HEAD
+//     List<StudentDetail> studentDetails = new ArrayList<>();
+//     for (Student student : students) {
+//       StudentDetail studentDetail = new StudentDetail();
+//       studentDetail.setStudent(student);
+//       for (StudentCourse studentCourse : studentCourses) {
+//         if (student.getId().equals(studentCourse.getStudentId())) {
+//           // 処理内容を記載
+//         }
+//       }
+//     }
+//     return
+// =======
+//     return converter.convertStudentDetails(students, studentCourses);
+// >>>>>>> 207bceb (feat: Read処理のConverter部分実装)
+//   }
   
   @GetMapping("/studentsCourseList")
   public List<StudentCourse> getStudentsCourseList() {
