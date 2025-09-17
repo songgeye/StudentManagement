@@ -40,7 +40,7 @@ public class StudentController {
 //     }
 //     return
 // =======
-//     return converter.convertStudentDetails(students, studentCourses);
+    return converter.convertStudentDetails(students, studentCourses);
 // >>>>>>> 207bceb (feat: Read処理のConverter部分実装)
 //   }
   
