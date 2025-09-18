@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>受講生情報一覧</title>
@@ -20,6 +20,19 @@
     <th>備考</th>
   </tr>
   </thead>
+  <tbody>
+  <tr th:each="studentDetail : ${studentList}">
+    <td th:text="${studentDetail.student.id}">1</td>
+    <td th:text="${studentDetail.student.name}">Aika</td>
+    <td th:text="${studentDetail.student.kanaName}">あいか</td>
+    <td th:text="${studentDetail.student.nickname}">あいかちゃん</td>
+    <td th:text="${studentDetail.student.email}">aika@gmail.com</td>
+    <td th:text="${studentDetail.student.address}">熊本県</td>
+    <td th:text="${studentDetail.student.age}">1</td>
+    <td th:text="${studentDetail.student.gender}">F</td>
+    <td th:text="${studentDetail.student.remark}">特になし</td>
+  </tr>
+  </tbody>
 </table>
 </body>
 </html>
