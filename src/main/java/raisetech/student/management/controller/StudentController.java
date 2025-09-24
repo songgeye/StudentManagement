@@ -53,6 +53,8 @@ public class StudentController {
     }
     System.out.println(
         studentDetail.getStudent().getName() + "さんが新規受講生として登録されました。");
+//    新規受講生情報を登録する処理を実装する。
+//    コース情報も一緒に登録できるように実装する。コースは単体でいい。
     return "redirect:/studentsList";
   }
 }
