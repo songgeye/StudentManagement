@@ -45,9 +45,9 @@ public interface StudentRepository {
 
   @Insert("""
       INSERT INTO students 
-      (id, name) 
+      (id, name, gender) 
       VALUES 
-      (#{id}, #{name})
+      (#{id}, #{name}, #{gender})
       """)
   int insertStudent(Student student);
 }
