@@ -49,7 +49,7 @@ public class StudentController {
   @PostMapping("/registerStudent")
   public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
     if (result.hasErrors()) {
-      return "registerStudent";
+      return "registerStudent.html";
     }
 //    System.out.println(
 //        studentDetail.getStudent().getName() + "さんが新規受講生として登録されました。");

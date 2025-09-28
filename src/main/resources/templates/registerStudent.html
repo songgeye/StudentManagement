@@ -11,6 +11,16 @@
     <label for="name">名前</label>
     <input type="text" id="name" th:field="*{student.name}" required>
   </div>
+  <!-- カナ名（追加が必要） -->
+  <div>
+    <label for="kanaName">カナ名</label>
+    <input type="text" id="kanaName" th:field="*{student.kanaName}" required>
+  </div>
+  <!-- メールアドレス（追加が必要） -->
+  <div>
+    <label for="email">メールアドレス</label>
+    <input type="email" id="email" th:field="*{student.email}" required>
+  </div>
   <div>
     <button type="submit">登録</button>
   </div>

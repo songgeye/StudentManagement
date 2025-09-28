@@ -44,10 +44,10 @@ public interface StudentRepository {
   List<StudentCourse> searchStudentCourses();
 
   @Insert("""
-      INSERT INTO students 
-      (id, name, gender) 
-      VALUES 
-      (#{id}, #{name}, #{gender})
+      INSERT INTO students
+      (id, name, kana_name, email)
+      VALUES
+      (#{id}, #{name}, #{kanaName}, #{email})
       """)
   int insertStudent(Student student);
 }
