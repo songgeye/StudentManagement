@@ -12,7 +12,7 @@ public class Student {
   private String kanaName;
   private String nickname;
   private String email;
-  private String address;
+  private String area;
   private int age;
   private String gender;
   private String remark;
