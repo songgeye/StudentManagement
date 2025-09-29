@@ -51,8 +51,7 @@ public class StudentController {
     if (result.hasErrors()) {
       return "registerStudent";
     }
-    System.out.println(
-        studentDetail.getStudent().getName() + "さんが新規受講生として登録されました。");
+    service.registerStudent(studentDetail);
     return "redirect:/studentsList";
   }
 }
