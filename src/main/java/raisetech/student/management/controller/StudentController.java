@@ -49,14 +49,9 @@ public class StudentController {
   @PostMapping("/registerStudent")
   public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
     if (result.hasErrors()) {
-      return "registerStudent.html";
+      return "registerStudent";
     }
-//    System.out.println(
-//        studentDetail.getStudent().getName() + "さんが新規受講生として登録されました。");
-//    新規受講生情報を登録する処理を実装する。
-//    コース情報も一緒に登録できるように実装する。コースは単体でいい。
-    Student newStudent = studentDetail.getStudent();
-    service.registerStudent(newStudent);
+    service.registerStudent(studentDetail);
     return "redirect:/studentsList";
   }
 }
