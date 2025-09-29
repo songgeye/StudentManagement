@@ -9,7 +9,7 @@
 <form th:action="@{/registerStudent}" th:object="${studentDetail}" method="post">
   <div>
     <label for="name">名前</label>
-    <input type="text" id="name" th:field="*{student.name}" required/>
+    <input type="text" id="name" th:field="*{student.name}" required>
   </div>
   <div>
     <button type="submit">登録</button>

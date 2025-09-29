@@ -26,7 +26,7 @@ public interface StudentRepository {
 //      @Result(property = "kanaName", column = "kana_name"),
 //      @Result(property = "nickname", column = "nickname"),
 //      @Result(property = "email", column = "email"),
-//      @Result(property = "address", column = "address"),
+//      @Result(property = "area", column = "area"),
 //      @Result(property = "age", column = "age"),
 //      @Result(property = "gender", column = "gender")
 //  })
