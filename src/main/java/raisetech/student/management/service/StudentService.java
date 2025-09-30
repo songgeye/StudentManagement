@@ -31,7 +31,6 @@ public class StudentService {
   @Transactional
   public void registerStudent(StudentDetail studentDetail) {
     repository.registerStudent(studentDetail.getStudent());
-    // TODO:コース情報登録
     for (StudentCourse studentCourse : studentDetail.getStudentCourse()) {
       studentCourse.setStudentId(studentDetail.getStudent().getId());
       studentCourse.setCourseStartAt(LocalDateTime.now());
