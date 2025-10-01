@@ -32,7 +32,7 @@ public class StudentService {
   public void registerStudent(StudentDetail studentDetail) {
     repository.registerStudent(studentDetail.getStudent());
     for (StudentCourse studentCourse : studentDetail.getStudentCourse()) {
-      studentCourse.setStudentId(studentDetail.getStudent().getId());
+      studentCourse.setStudentId(studentDetail.getStudent().getId()); // String -> id の影響か？
       studentCourse.setCourseStartAt(LocalDateTime.now());
       studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
       repository.registerStudentCourse(studentCourse);
