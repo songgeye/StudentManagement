@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 
@@ -55,4 +56,18 @@ public interface StudentRepository {
           + "VALUES(#{studentId}, #{courseName}, #{courseStartAt}, #{courseEndAt})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void registerStudentCourse(StudentCourse studentCourse);
+
+  @Update(
+      "UPDATE students "
+          + "SET name = #{name}, "
+          + "kana_name = #{kanaName}, "
+          + "nickname = #{nickname}, "
+          + "email = #{email}, "
+          + "area = #{area}, "
+          + "age = #{age}, "
+          + "gender = #{gender}, "
+          + "remark = #{remark} "
+          + "WHERE id = #{id}"
+  )
+  void updateStudent(Student student);
 }
