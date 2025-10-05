@@ -23,7 +23,8 @@
   <tbody>
   <tr th:each="studentDetail : ${studentList}">
     <td th:text="${studentDetail.student.id}">1</td>
-    <td><a th:href="@{/updateStudent/(name=*{name})}" th:text="${studentDetail.student.name}">Aika</a></td>
+    <td><a th:href="@{/updateStudent(id=${studentDetail.student.id})}"
+           th:text="${studentDetail.student.name}">Aika</a></td> <!-- Controller側で@RequestParam int idとして受け取っているため、パラメータ名はidである必要がある-->
     <td th:text="${studentDetail.student.kanaName}">あいか</td>
     <td th:text="${studentDetail.student.nickname}">あいかちゃん</td>
     <td th:text="${studentDetail.student.email}">aika@gmail.com</td>

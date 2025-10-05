@@ -46,13 +46,15 @@ public interface StudentRepository {
   List<StudentCourse> searchStudentCourses();
 
   @Insert(
-      "INSERT INTO students(name, kana_name, nickname, email, area, age, gender, remark, is_deleted) "
+      "INSERT INTO students "
+          + "(name, kana_name, nickname, email, area, age, gender, remark, is_deleted) "
           + "VALUES(#{name}, #{kanaName}, #{nickname}, #{email}, #{area}, #{age}, #{gender}, #{remark}, false)")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void registerStudent(Student student);
 
   @Insert(
-      "INSERT INTO students_courses(student_id, course_name, course_start_at, course_end_at) "
+      "INSERT INTO students_courses "
+          + "(student_id, course_name, course_start_at, course_end_at) "
           + "VALUES(#{studentId}, #{courseName}, #{courseStartAt}, #{courseEndAt})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void registerStudentCourse(StudentCourse studentCourse);
@@ -70,4 +72,32 @@ public interface StudentRepository {
           + "WHERE id = #{id}"
   )
   void updateStudent(Student student);
+
+  /**
+   * IDで受講生を1件検索する
+   *
+   * @param id 検索する受講生のID
+   * @return 見つかった受講生(見つからない場合はnull)
+   */
+  @Select("SELECT * FROM students WHERE id = #{id}")
+  Student searchStudent(Integer id);
+
+  /**
+   * 指定された受講生IDのコース情報を取得する
+   *
+   * @param studentId 受講生のID
+   * @return その受講生のコース情報リスト
+   */
+  @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
+  List<StudentCourse> searchStudentCoursesByStudentId(Integer studentId);
+
+  @Update(
+      "UPDATE students_courses "
+          + "SET course_name = #{courseName}, "
+          + "course_start_at = #{courseStartAt}, "
+          + "course_end_at = #{courseEndAt} "
+          + "WHERE student_id = #{studentId}"
+  )
+  void updateStudentCourse(StudentCourse studentCourse);
 }
+

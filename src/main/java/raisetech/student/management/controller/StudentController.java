@@ -51,10 +51,16 @@ public class StudentController {
   }
 
   @GetMapping("/updateStudent")
-  public String updateStudent(@RequestParam int id, Model model) {
+  public String updateStudent(@RequestParam Integer id, Model model) {
     StudentDetail studentDetail = service.searchStudent(id);
-    model.addAttribute("StudentDetail", studentDetail);
+    model.addAttribute("studentDetail", studentDetail);
     return "updateStudent";
+  }
+
+  @PostMapping("/updateStudent")
+  public String updateStudent(@ModelAttribute StudentDetail studentDetail) {
+    service.updateStudent(studentDetail);
+    return "redirect:/studentsList";
   }
 
   @PostMapping("/registerStudent")
