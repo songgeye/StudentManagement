@@ -96,7 +96,7 @@ public interface StudentRepository {
           + "SET course_name = #{courseName}, "
           + "course_start_at = #{courseStartAt}, "
           + "course_end_at = #{courseEndAt} "
-          + "WHERE student_id = #{studentId}"
+          + "WHERE id = #{id}"
   )
   void updateStudentCourse(StudentCourse studentCourse);
 }

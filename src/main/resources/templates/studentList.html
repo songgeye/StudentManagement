@@ -22,16 +22,16 @@
   </thead>
   <tbody>
   <tr th:each="studentDetail : ${studentList}">
-    <td th:text="${studentDetail.student.id}">1</td>
+    <td th:text="${studentDetail.student.id}"></td>
     <td><a th:href="@{/updateStudent(id=${studentDetail.student.id})}"
-           th:text="${studentDetail.student.name}">Aika</a></td> <!-- Controller側で@RequestParam int idとして受け取っているため、パラメータ名はidである必要がある-->
-    <td th:text="${studentDetail.student.kanaName}">あいか</td>
-    <td th:text="${studentDetail.student.nickname}">あいかちゃん</td>
-    <td th:text="${studentDetail.student.email}">aika@gmail.com</td>
-    <td th:text="${studentDetail.student.area}">熊本県</td>
-    <td th:text="${studentDetail.student.age}">1</td>
-    <td th:text="${studentDetail.student.gender}">F</td>
-    <td th:text="${studentDetail.student.remark}">特になし</td>
+           th:text="${studentDetail.student.name}"></a></td> <!-- Controller側で@RequestParam int idとして受け取っているため、パラメータ名はidである必要がある-->
+    <td th:text="${studentDetail.student.kanaName}"></td>
+    <td th:text="${studentDetail.student.nickname}"></td>
+    <td th:text="${studentDetail.student.email}"></td>
+    <td th:text="${studentDetail.student.area}"></td>
+    <td th:text="${studentDetail.student.age}"></td>
+    <td th:text="${studentDetail.student.gender}"></td>
+    <td th:text="${studentDetail.student.remark}"></td>
   </tr>
   </tbody>
 </table>
