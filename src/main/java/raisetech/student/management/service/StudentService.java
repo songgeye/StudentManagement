@@ -51,7 +51,7 @@ public class StudentService {
     for (StudentCourse studentCourse : studentDetail.getStudentCourse()) {
       // 受講生IDをセット
       studentCourse.setStudentId(
-          Integer.valueOf(String.valueOf(studentDetail.getStudent().getId())));
+          studentDetail.getStudent().getId());
       // 開始日・終了日をセット
       studentCourse.setCourseStartAt(LocalDateTime.now());
       studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
@@ -84,8 +84,12 @@ public class StudentService {
     // ②コース情報を更新(forループで全コースを更新)
     for (StudentCourse studentCourse : studentDetail.getStudentCourse()) {
       studentCourse.setStudentId(
-          Integer.valueOf(String.valueOf(studentDetail.getStudent().getId())));
-      studentCourse.setCourseStartAt(LocalDateTime.now());
+          studentDetail.getStudent().getId());
+      if (studentCourse.getId() == null) {
+        studentCourse.setCourseStartAt(LocalDateTime.now());
+      } else {
+
+      }
       studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
       if (studentCourse.getId() == null) {
         repository.registerStudentCourse(studentCourse);
