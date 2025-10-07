@@ -2,6 +2,7 @@ package raisetech.student.management.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,9 +52,12 @@ public class StudentController {
   }
 
   @GetMapping("/updateStudent")
-  public String updateStudent(@RequestParam int id, Model model) {
-    StudentDetail studentDetail = service.searchStudent(id);
-    model.addAttribute("StudentDetail", studentDetail);
+  public String updateStudent(@RequestParam Integer id, Model model) {
+    Optional<StudentDetail> studentDetailOpt = Optional.ofNullable(service.searchStudent(id));
+    if (studentDetailOpt.isEmpty()) {
+      return "redirect:/studentsList";
+    }
+    model.addAttribute("studentDetail", studentDetailOpt.get());
     return "updateStudent";
   }
 
@@ -65,4 +69,11 @@ public class StudentController {
     service.registerStudent(studentDetail);
     return "redirect:/studentsList";
   }
+
+  @PostMapping("/updateStudent")
+  public String updateStudent(@ModelAttribute StudentDetail studentDetail) {
+    service.updateStudent(studentDetail);
+    return "redirect:/studentsList";
+  }
 }
+
