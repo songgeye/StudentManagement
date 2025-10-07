@@ -86,12 +86,6 @@ public class StudentService {
       studentCourse.setStudentId(
           studentDetail.getStudent().getId());
       if (studentCourse.getId() == null) {
-        studentCourse.setCourseStartAt(LocalDateTime.now());
-      } else {
-
-      }
-      studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
-      if (studentCourse.getId() == null) {
         repository.registerStudentCourse(studentCourse);
       } else {
         repository.updateStudentCourse(studentCourse);
