@@ -59,7 +59,7 @@ public class StudentService {
     }
   }
 
-  public StudentDetail searchStudent(int id) {
+  public StudentDetail searchStudent(Integer id) {
     // ①リポジトリで受講生を検索
     Student student = repository.searchStudent(id);
     // どちらでもOKだが、idの方がシンプル
