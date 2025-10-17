@@ -81,11 +81,5 @@ public class StudentController {
     service.updateStudent(studentDetail);
     return "redirect:/studentsList";
   }
-
-  @PostMapping("/updateStudent")
-  public String updateStudent(@ModelAttribute StudentDetail studentDetail) {
-    service.updateStudent(studentDetail);
-    return "redirect:/studentsList";
-  }
 }
 
