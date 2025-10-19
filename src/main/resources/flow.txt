@@ -1,0 +1,56 @@
+1. タスク5: リポジトリ(SQL文)
+     ↓ (これができたら次へ)
+2. タスク4: サービス
+     ↓
+3. タスク8: リポジトリの更新SQL
+     ↓
+4. タスク7: サービスの更新メソッド
+     ↓
+5. タスク3: コントローラーの表示メソッド
+     ↓
+6. タスク6: コントローラーの更新メソッド
+     ↓
+7. タスク1: HTML作成
+     ↓
+8. タスク2: 一覧画面にリンク追加
+
+【Service層】
+service.searchStudent(123) の中で:
+
+① repository.searchStudent(123) を呼び出し
+    ↓
+【Repository層】
+@Select("SELECT * FROM students WHERE id = 123")
+    ↓
+【Database】
+SELECT * FROM students WHERE id = 123;
+    ↓
+結果: { id: 123, name: "山田太郎", age: 25, ... }
+    ↓
+【Repository層】
+Studentオブジェクトに変換
+    ↓
+【Service層】
+Student student = ... で受け取る
+
+---
+
+② repository.searchStudentCoursesByStudentId(123) を呼び出し
+    ↓
+【Repository層】
+@Select("SELECT * FROM students_courses WHERE student_id = 123")
+    ↓
+【Database】
+SELECT * FROM students_courses WHERE student_id = 123;
+    ↓
+結果:
+[
+  { id: 1, student_id: 123, course_name: "Java", ... },
+  { id: 2, student_id: 123, course_name: "AWS", ... }
+]
+    ↓
+【Repository層】
+List<StudentCourse>に変換
+    ↓
+【Service層】
+List<StudentCourse> studentCourses = ... で受け取る
