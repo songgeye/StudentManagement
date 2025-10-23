@@ -3,10 +3,12 @@ package raisetech.student.management.data;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Student {
 
   @Pattern(regexp = "^\\d+$")
@@ -18,7 +20,7 @@ public class Student {
 
   @Email
   private String email;
-  
+
   private String area;
   private int age;
   private String gender;
