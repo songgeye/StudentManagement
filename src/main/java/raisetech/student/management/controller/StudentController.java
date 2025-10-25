@@ -50,7 +50,7 @@ public class StudentController {
    */
   @GetMapping("/student/{id}")
   public StudentDetail getStudent(
-      @PathVariable @Valid @Pattern(regexp = "^\\d+$") String id) {
+      @PathVariable @Pattern(regexp = "^\\d+$") String id) {
     return service.searchStudent(id);
   }
 
