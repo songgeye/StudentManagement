@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import raisetech.student.management.domain.StudentDetail;
-import raisetech.student.management.exception.BaseException;
 import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
@@ -89,16 +88,5 @@ public class StudentController {
   @GetMapping("/test-exception")
   public String testException() throws TestException {
     throw new TestException("テスト例外が発生しました");
-  }
-
-  /**
-   * BaseExceptionをハンドリングです。
-   *
-   * @return 発生した例外
-   * @throws BaseException エラーレスポンス
-   */
-  @GetMapping("/test-global-exception")
-  public String testGlobalException() throws BaseException {
-    throw new BaseException("テスト例外が発生しました");
   }
 }

@@ -2,9 +2,8 @@ package raisetech.student.management.exception;
 
 public class NotFoundException extends RuntimeException {
 
-  public NotFoundException
-
   public NotFoundException() {
+    super();
   }
 
   public NotFoundException(String message) {

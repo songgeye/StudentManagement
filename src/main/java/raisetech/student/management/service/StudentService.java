@@ -47,7 +47,7 @@ public class StudentService {
   public StudentDetail searchStudent(String id) {
     Student student = repository.searchStudent(id);
     if (student == null) {
-      throw new NotFoundException("IDが未定義です" + id);
+      throw new NotFoundException("IDが未定義です: " + id);
     }
     List<StudentCourse> studentCourse = repository.searchStudentCourse(student.getId());
     return new StudentDetail(student, studentCourse);

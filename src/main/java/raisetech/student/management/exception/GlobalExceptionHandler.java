@@ -1,11 +1,14 @@
 package raisetech.student.management.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,14 +18,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+  private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
   @ExceptionHandler(TestException.class)
   public ResponseEntity<String> handleTestException(TestException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
   }
 
-  @ExceptionHandler(BaseException.class)
-  public ResponseEntity<String> handleBaseException(BaseException ex) {
-    return new ResponseEntity<>("現在このAPIは利用できません", HttpStatus.SERVICE_UNAVAILABLE);
+  @ExceptionHandler(NotFoundException.class)
+  public ResponseEntity<String> handleNotFoundException(NotFoundException ex,
+      HttpServletRequest request) {
+    logger.warn("404 NotFound: {} {} - {}", request.getMethod(), request.getRequestURI(),
+        ex.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
   }
 
   /**
