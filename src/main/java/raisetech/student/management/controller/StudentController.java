@@ -80,7 +80,7 @@ public class StudentController {
   }
 
   /**
-   * TestExceptionをハンドリングです。
+   * TestExceptionのハンドリングです。
    *
    * @return 発生した例外
    * @throws TestException エラーレスポンス
