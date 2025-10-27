@@ -1,5 +1,14 @@
 package raisetech.student.management.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import java.util.List;
@@ -19,6 +28,7 @@ import raisetech.student.management.service.StudentService;
 /**
  * 受講生の検索や登録、更新などを行うREST APIとして受け付けるControllerです。
  */
+@Tag(name = "受講生管理", description = "受講生の検索、登録、更新などの操作が可能です")
 @Validated
 @RestController
 public class StudentController {
@@ -36,6 +46,28 @@ public class StudentController {
    *
    * @return 受講生詳細一覧(全件)
    */
+  @Operation(
+      summary = "一覧検索",
+      description = "受講生詳細の一覧検索です。 全件検索を行うので、条件指定は行いません",
+      operationId = "getStudentsList",
+      parameters = {
+          @Parameter(
+              name = "id",
+              description = "受講生ID",
+              in = ParameterIn.PATH,
+              required = true,
+              example = "1"
+          )
+      }
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200",
+          description = "受講生詳細一覧(全件)を返却します",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = List.class))),
+      @ApiResponse(responseCode = "204", description = "受講生が存在しません",
+          content = @Content)
+  })
   @GetMapping("/studentsList")
   public List<StudentDetail> getStudentsList() {
     return service.searchStudentList();
@@ -47,6 +79,30 @@ public class StudentController {
    * @param id 受講生ID
    * @return 受講生
    */
+  @Operation(
+      summary = "受講生詳細の単一検索",
+      description = "受講生詳細の検索です。 IDに紐づく任意の受講生の情報を取得します。",
+      operationId = "getStudent",
+      parameters = {
+          @Parameter(
+              name = "studentId",
+              description = "受講生情報の受講生ID",
+              in = ParameterIn.PATH,
+              required = true,
+              example = "12345"
+          )
+      }
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200",
+          description = "受講生情報(単一)を返却します",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = StudentDetail.class))),
+      @ApiResponse(responseCode = "404", description = "IDが未定義です: {id}",
+          content = @Content),
+      @ApiResponse(responseCode = "400", description = "リクエストパラメータにエラーがあります: getStudent.id: 正規表現 \"^\\d+$\" にマッチさせてください",
+          content = @Content)
+  })
   @GetMapping("/student/{id}")
   public StudentDetail getStudent(
       @PathVariable @Pattern(regexp = "^\\d+$") String id) {
@@ -59,6 +115,36 @@ public class StudentController {
    * @param studentDetail 受講生詳細
    * @return 実行結果
    */
+  @Operation(
+      summary = "受講生登録",
+      description = "受講生詳細の登録を行います。",
+      operationId = "registerStudent",
+      requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "登録する受講生の詳細情報",
+          required = true,
+          content = @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = StudentDetail.class),
+              examples = {
+                  @ExampleObject(
+                      name = "基本的な受講生情報",
+                      summary = "最小限の必須情報を含む例",
+                      value = "{ \"student\": { \"name\": \"山田太郎\", \"kanaName\": \"ヤマダタロウ\", \"email\": \"yamada@example.com\", \"area\": \"東京\", \"age\": 25, \"gender\": \"男性\" }, \"studentsCourseList\": [{ \"courseName\": \"Spring Boot基礎\" }] }"
+                  )
+              }
+          )
+      )
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200",
+          description = "受講生登録の実行結果を返却します",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = String.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request - リクエストが不正です(エラー詳細は現在実装されていません)",
+          content = @Content),
+      @ApiResponse(responseCode = "500", description = "Internal Server Error(現在、詳細なエラーメッセージは実装されていません)",
+          content = @Content)
+  })
   @PostMapping("/registerStudent")
   public ResponseEntity<StudentDetail> registerStudent(
       @RequestBody @Valid StudentDetail studentDetail) {
@@ -72,6 +158,41 @@ public class StudentController {
    * @param studentDetail 受講生詳細
    * @return 実行結果
    */
+  @Operation(
+      summary = "受講生更新",
+      description = "受講生情報の更新をします。",
+      operationId = "updateStudent",
+      requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "更新する受講生の詳細情報",
+          required = true,
+          content = @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = StudentDetail.class),
+              examples = {
+                  @ExampleObject(
+                      name = "更新情報の例",
+                      summary = "ID指定と更新したい情報を含む例",
+                      value = "{ \"student\": { \"id\": \"1\", \"name\": \"山田太郎\", \"kanaName\": \"ヤマダタロウ\", \"email\": \"updated@example.com\", \"area\": \"大阪\", \"age\": 26, \"gender\": \"男性\", \"isDeleted\": false }, \"studentsCourseList\": [{ \"id\": \"1\", \"studentId\": \"1\", \"courseName\": \"Spring Boot応用\" }] }"
+                  ),
+                  @ExampleObject(
+                      name = "論理削除の例",
+                      summary = "受講生を論理削除する例",
+                      value = "{ \"student\": { \"id\": \"1\", \"name\": \"山田太郎\", \"kanaName\": \"ヤマダタロウ\", \"email\": \"yamada@example.com\", \"area\": \"東京\", \"age\": 25, \"gender\": \"男性\", \"isDeleted\": true }, \"studentsCourseList\": [{ \"id\": \"1\", \"studentId\": \"1\", \"courseName\": \"Spring Boot基礎\" }] }"
+                  )
+              }
+          )
+      )
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200",
+          description = "受講生更新の実行結果を返却します",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = String.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request - リクエストが不正です(エラー詳細は現在実装されていません)",
+          content = @Content),
+      @ApiResponse(responseCode = "500", description = "Internal Server Error(現在、詳細なエラーメッセージは実装されていません)",
+          content = @Content)
+  })
   @PutMapping("/updateStudent")
   public ResponseEntity<String> updateStudent(
       @RequestBody @Valid StudentDetail studentDetail) {
@@ -80,11 +201,31 @@ public class StudentController {
   }
 
   /**
-   * TestExceptionをハンドリングです。
+   * TestExceptionのハンドリングです。
    *
    * @return 発生した例外
    * @throws TestException エラーレスポンス
    */
+  @Operation(
+      summary = "例外テスト",
+      description = "TestExceptionをスローするテスト用エンドポイントです。エラーハンドリングの動作確認に使用します。",
+      tags = "開発者ツール",
+      parameters = {
+          @Parameter(
+              name = "debug",
+              description = "デバッグ情報を含めるかどうか(オプション)",
+              in = ParameterIn.QUERY,
+              required = true,
+              schema = @Schema(type = "boolean"),
+              example = "true"
+          )
+      }
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "テスト例外が発生しました",
+          content = @Content(mediaType = "text/plain",
+              schema = @Schema(implementation = String.class)))
+  })
   @GetMapping("/test-exception")
   public String testException() throws TestException {
     throw new TestException("テスト例外が発生しました");
