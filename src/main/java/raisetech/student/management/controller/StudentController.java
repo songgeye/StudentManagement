@@ -25,10 +25,8 @@ import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
-/**
- * 受講生の検索や登録、更新などを行うREST APIとして受け付けるControllerです。
- */
-@Tag(name = "受講生管理", description = "受講生の検索、登録、更新などの操作が可能です")
+
+@Tag(name = "受講生管理", description = "受講生の検索や登録、更新などを行うREST APIとして受け付けるControllerです。")
 @Validated
 @RestController
 public class StudentController {
@@ -41,11 +39,6 @@ public class StudentController {
     this.service = service;
   }
 
-  /**
-   * 受講生詳細の一覧検索です。 全件検索を行うので、条件指定は行いません。
-   *
-   * @return 受講生詳細一覧(全件)
-   */
   @Operation(
       summary = "一覧検索",
       description = "受講生詳細の一覧検索です。 全件検索を行うので、条件指定は行いません",
@@ -73,12 +66,6 @@ public class StudentController {
     return service.searchStudentList();
   }
 
-  /**
-   * 受講生詳細の検索です。 IDに紐づく任意の受講生の情報を取得します。
-   *
-   * @param id 受講生ID
-   * @return 受講生
-   */
   @Operation(
       summary = "受講生詳細の単一検索",
       description = "受講生詳細の検索です。 IDに紐づく任意の受講生の情報を取得します。",
@@ -109,12 +96,6 @@ public class StudentController {
     return service.searchStudent(id);
   }
 
-  /**
-   * 受講生詳細の登録を行います。
-   *
-   * @param studentDetail 受講生詳細
-   * @return 実行結果
-   */
   @Operation(
       summary = "受講生登録",
       description = "受講生詳細の登録を行います。",
@@ -152,12 +133,6 @@ public class StudentController {
     return ResponseEntity.ok(responseStudentDetail);
   }
 
-  /**
-   * 受講詳細の更新を行います。キャンセルフラグの更新もここで行います(論理削除)
-   *
-   * @param studentDetail 受講生詳細
-   * @return 実行結果
-   */
   @Operation(
       summary = "受講生更新",
       description = "受講生情報の更新をします。",
@@ -200,12 +175,6 @@ public class StudentController {
     return ResponseEntity.ok("更新処理が成功しました。");
   }
 
-  /**
-   * TestExceptionのハンドリングです。
-   *
-   * @return 発生した例外
-   * @throws TestException エラーレスポンス
-   */
   @Operation(
       summary = "例外テスト",
       description = "TestExceptionをスローするテスト用エンドポイントです。エラーハンドリングの動作確認に使用します。",
@@ -222,7 +191,7 @@ public class StudentController {
       }
   )
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "400", description = "テスト例外が発生しました",
+      @ApiResponse(responseCode = "400", description = "テスト例外が発生しました(エラーレスポンスを返却します)",
           content = @Content(mediaType = "text/plain",
               schema = @Schema(implementation = String.class)))
   })
