@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.TestException;
+import raisetech.student.management.model.StudentDetailList;
 import raisetech.student.management.service.StudentService;
 
 
@@ -57,7 +58,7 @@ public class StudentController {
       @ApiResponse(responseCode = "200",
           description = "受講生詳細一覧(全件)を返却します",
           content = @Content(mediaType = "application/json",
-              schema = @Schema(implementation = List.class))),
+              schema = @Schema(implementation = StudentDetailList.class))),
       @ApiResponse(responseCode = "204", description = "受講生が存在しません",
           content = @Content)
   })
