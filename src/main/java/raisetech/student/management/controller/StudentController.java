@@ -46,7 +46,6 @@ public class StudentController {
       operationId = "getStudentsList",
       parameters = {
           @Parameter(
-              name = "id",
               description = "受講生ID",
               in = ParameterIn.PATH,
               required = true,
@@ -73,7 +72,7 @@ public class StudentController {
       operationId = "getStudent",
       parameters = {
           @Parameter(
-              name = "studentId",
+              name = "id",
               description = "受講生情報の受講生ID",
               in = ParameterIn.PATH,
               required = true,
