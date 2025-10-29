@@ -47,8 +47,6 @@ public class StudentController {
       parameters = {
           @Parameter(
               description = "受講生ID",
-              in = ParameterIn.PATH,
-              required = true,
               example = "1"
           )
       }
