@@ -43,13 +43,7 @@ public class StudentController {
   @Operation(
       summary = "一覧検索",
       description = "受講生詳細の一覧検索です。 全件検索を行うので、条件指定は行いません",
-      operationId = "getStudentsList",
-      parameters = {
-          @Parameter(
-              description = "受講生ID",
-              example = "1"
-          )
-      }
+      operationId = "getStudentsList"
   )
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200",
