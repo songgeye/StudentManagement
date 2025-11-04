@@ -1,5 +1,10 @@
 package raisetech.student.management.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,12 +33,33 @@ class StudentServiceTest {
 
   private StudentService sut;
   private Student student;
-  private StudentCourse studentCourse;
+  private List<StudentCourse> studentCourseList;
+  private StudentDetail studentDetail;
 
   @BeforeEach
   void before() {
     sut = new StudentService(repository, converter);
-    Student studentstu = new Student();
+    student = new Student();
+    student.setName("テスト太郎");
+    student.setKanaName("テストタロウ");
+    student.setEmail("test@example.com");
+    student.setArea("東京");
+    student.setAge(25);
+    student.setGender("M");
+
+    studentCourseList = new ArrayList<>();
+
+    StudentCourse firstCourse = new StudentCourse();
+    firstCourse.setCourseName("Javaフルコース");
+    studentCourseList.add(firstCourse);
+
+    StudentCourse secondCourse = new StudentCourse();
+    secondCourse.setCourseName("フロントエンドコース");
+    studentCourseList.add(secondCourse);
+
+    studentDetail = new StudentDetail();
+    studentDetail.setStudent(student);
+    studentDetail.setStudentsCourseList(studentCourseList);
   }
 
   @Test
@@ -52,18 +78,26 @@ class StudentServiceTest {
 
   @Test
   void 受講生詳細の登録_受講生と受講生コース情報を個別に登録し受講生コース情報には受講生情報を紐づける値とコース開始日とコース終了日を設定できていること() {
+    doAnswer(
+        invocation -> {
+          Student s = invocation.getArgument(0);
+          s.setId("1");
+          return null;
+        }
+    ).when(repository).registerStudent(any(Student.class));
 
-    StudentDetail studentDetailsut;
-    studentDetailsut = new StudentDetail();
-    student.setName(student.getName());
-    student.setKanaName(student.getKanaName());
-    student.setNickname(student.getNickname());
-    student.setEmail(student.getEmail());
-    student.setArea(student.getArea());
-    student.setAge(student.getAge());
-    student.setGender(student.getGender());
-    Object studentDetailstu;
-    studentDetailstu.setStudent();
-    sut.registerStudent();
+    StudentDetail result = sut.registerStudent(studentDetail);
+
+    verify(repository).registerStudent(student);
+    verify(repository, times(studentCourseList.size())).registerStudentCourse(
+        any(StudentCourse.class));
+
+    for (StudentCourse studentCourse : result.getStudentsCourseList()) {
+      assertEquals(student.getId(), studentCourse.getStudentId());
+      assertNotNull(studentCourse.getCourseStartAt());
+      assertNotNull(studentCourse.getCourseEndAt());
+    }
+
+    assertSame(studentDetail, result);
   }
 }
