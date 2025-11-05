@@ -120,11 +120,11 @@ class StudentServiceTest {
     verify(repository).registerStudent(student);
     verify(repository).registerStudentCourse(firstCourse);
 
-    for (StudentCourse course : result.getStudentsCourseList()) {
+    result.getStudentsCourseList().forEach(course -> {
       assertEquals(student.getId(), course.getStudentId());
       assertNotNull(course.getCourseStartAt());
       assertNotNull(course.getCourseEndAt());
-    }
+    });
 
     assertSame(studentDetail, result);
   }
