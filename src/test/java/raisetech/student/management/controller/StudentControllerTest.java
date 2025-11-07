@@ -1,0 +1,17 @@
+package raisetech.student.management.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import raisetech.student.management.service.StudentService;
+
+@WebMvcTest(StudentController.class)
+class StudentControllerTest {
+
+  @Autowired
+  private MockMvc mockMvc;
+
+  @MockitoBean
+  private StudentService service;
+}

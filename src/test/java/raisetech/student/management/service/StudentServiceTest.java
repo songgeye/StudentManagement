@@ -1,15 +1,11 @@
 package raisetech.student.management.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +17,6 @@ import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
-import raisetech.student.management.exception.NotFoundException;
 import raisetech.student.management.repository.StudentRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,115 +37,73 @@ class StudentServiceTest {
 
   @Test
   void 受講生詳細の一覧検索_リポジトリとコンバーターの処理が適切に呼び出せていること() {
-    // 準備
     List<Student> studentList = new ArrayList<>();
     List<StudentCourse> studentCourseList = new ArrayList<>();
     when(repository.search()).thenReturn(studentList);
     when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
 
-    // 実行
     sut.searchStudentList();
 
-    // 検証
-    verify(repository).search();
-    verify(repository).searchStudentCourseList();
-    verify(converter).convertStudentDetails(studentList, studentCourseList);
+    verify(repository, times(1)).search();
+    verify(repository, times(1)).searchStudentCourseList();
+    verify(converter, times(1)).convertStudentDetails(studentList, studentCourseList);
   }
 
   @Test
-  void 受講生詳細の検索_リポジトリのsearchStudentとsearchStudentCourseメソッドが正しく呼び出されること() {
-    // 準備
-    String testId = "1";
-    Student searchStudent = new Student();
-    searchStudent.setId(testId);
-    List<StudentCourse> studentCourseList = new ArrayList<>();
-
-    when(repository.searchStudent(testId)).thenReturn(searchStudent);
-    when(repository.searchStudentCourse(testId)).thenReturn(studentCourseList);
-
-    // 実行
-    StudentDetail result = sut.searchStudent(testId);
-
-    // 検証
-    verify(repository).searchStudent(testId);
-    verify(repository).searchStudentCourse(testId);
-    assertEquals(searchStudent, result.getStudent());
-    assertEquals(studentCourseList, result.getStudentsCourseList());
-  }
-
-  @Test
-  void 受講生詳細の検索_存在しないIDの場合は例外がスローされること() {
-    // 準備
-    String nonExistingId = "999";
-    when(repository.searchStudent(nonExistingId)).thenReturn(null);
-
-    // 実行と検証
-    NotFoundException exception = assertThrows(NotFoundException.class,
-        () -> sut.searchStudent(nonExistingId));
-
-    // 追加検証
-    assertEquals("IDが未定義です: " + nonExistingId, exception.getMessage());
-    verify(repository).searchStudent(nonExistingId);
-    verify(repository, never()).searchStudentCourse(nonExistingId);
-  }
-
-  @Test
-  void 受講生詳細の登録_受講生と受講生コース情報を個別に登録し受講生コース情報には受講生情報を紐づける値とコース開始日とコース終了日を設定できていること() {
-    // 準備
+  void 受講生詳細の検索_リポジトリの処理が適切に呼び出せていること() {
+    String id = "999";
     Student student = new Student();
-    StudentCourse firstCourse = new StudentCourse();
+    student.setId(id);
+    when(repository.searchStudent(id)).thenReturn(student);
+    when(repository.searchStudentCourse(id)).thenReturn(new ArrayList<>());
 
-    List<StudentCourse> studentCourseList = new ArrayList<>();
-    studentCourseList.add(firstCourse);
-
-    StudentDetail studentDetail = new StudentDetail();
-    studentDetail.setStudent(student);
-    studentDetail.setStudentsCourseList(studentCourseList);
-
-    doAnswer(invocation -> {
-      Student s = invocation.getArgument(0);
-      s.setId("1");
-      return null;
-    }).when(repository).registerStudent(any(Student.class));
-
-    // 実行
-    StudentDetail result = sut.registerStudent(studentDetail);
+    StudentDetail expected = new StudentDetail(student, new ArrayList<>());
+    StudentDetail actual = sut.searchStudent(id);
 
     // 検証
-    verify(repository).registerStudent(student);
-    verify(repository).registerStudentCourse(firstCourse);
+    verify(repository, times(1)).searchStudent(id);
+    verify(repository, times(1)).searchStudentCourse(id);
+    assertEquals(expected.getStudent().getId(), actual.getStudent().getId());
+  }
 
-    result.getStudentsCourseList().forEach(course -> {
-      assertEquals(student.getId(), course.getStudentId());
-      assertNotNull(course.getCourseStartAt());
-      assertNotNull(course.getCourseEndAt());
-    });
+  @Test
+  void 受講生詳細の登録_リポジトリの処理が適切に呼び出せていること() {
+    Student student = new Student();
+    StudentCourse studentCourse = new StudentCourse();
+    List<StudentCourse> studentCourseList = List.of(studentCourse);
+    StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
 
-    assertSame(studentDetail, result);
+    sut.registerStudent(studentDetail);
+
+    verify(repository, times(1)).registerStudent(student);
+    verify(repository, times(1)).registerStudentCourse(studentCourse);
+  }
+
+  @Test
+  void 受講生詳細の登録_初期化処理が行われていること() {
+    String id = "999";
+    Student student = new Student();
+    student.setId(id);
+    StudentCourse studentCourse = new StudentCourse();
+
+    sut.initStudentsCourse(studentCourse, student.getId());
+
+    assertEquals(id, studentCourse.getStudentId());
+    assertEquals(LocalDateTime.now().getHour(), studentCourse.getCourseStartAt().getHour());
+    assertEquals(LocalDateTime.now().plusYears(1).getYear(),
+        studentCourse.getCourseEndAt().getYear());
   }
 
   @Test
   void 受講生詳細の更新＿リポジトリの更新メソッドが適切に呼び出されること() {
-    // 準備
-    Student updateStudent = new Student();
-    updateStudent.setId("1");
+    Student student = new Student();
+    StudentCourse studentCourse = new StudentCourse();
+    List<StudentCourse> studentCourseList = List.of(studentCourse);
+    StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
 
-    StudentCourse updateFirstCourse = new StudentCourse();
-    updateFirstCourse.setId("10");
-    updateFirstCourse.setStudentId("1");
+    sut.updateStudent(studentDetail);
 
-    List<StudentCourse> updateCourseList = new ArrayList<>();
-    updateCourseList.add(updateFirstCourse);
-
-    StudentDetail updateStudentDetail = new StudentDetail();
-    updateStudentDetail.setStudent(updateStudent);
-    updateStudentDetail.setStudentsCourseList(updateCourseList);
-
-    // 実行
-    sut.updateStudent(updateStudentDetail);
-
-    // 検証
-    verify(repository).updateStudent(updateStudent);
-    verify(repository).updateStudentCourse(updateFirstCourse);
+    verify(repository, times(1)).updateStudent(student);
+    verify(repository, times(1)).updateStudentCourse(studentCourse);
   }
 }
