@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Student {
 
-  @Pattern(regexp = "^\\d+$")
+  @Pattern(regexp = "^\\d+$", message = "数値のみ入力するようにしてください。")
   private String id;
 
   private String name;
