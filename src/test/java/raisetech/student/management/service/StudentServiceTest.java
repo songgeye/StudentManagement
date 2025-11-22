@@ -60,7 +60,6 @@ class StudentServiceTest {
     StudentDetail expected = new StudentDetail(student, new ArrayList<>());
     StudentDetail actual = sut.searchStudent(id);
 
-    // 検証
     verify(repository, times(1)).searchStudent(id);
     verify(repository, times(1)).searchStudentCourse(id);
     assertEquals(expected.getStudent().getId(), actual.getStudent().getId());
