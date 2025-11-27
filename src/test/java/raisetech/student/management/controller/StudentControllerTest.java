@@ -182,4 +182,32 @@ class StudentControllerTest {
     // 7. Serviceメソッド呼び出し確認（verify）
     verify(service, times(1)).registerStudent(any(StudentDetail.class));
   }
+
+  @Test
+  void 受講生登録で不正なデータを送信した時に400エラーが返ること() {
+    // 1. 不正なStudentオブジェクトを作成
+    Student invalidStudent = new Student();
+
+    // 2. StudentCourseリストを作成（正常でもOK）
+
+    // 3. 不正データを含むStudentDetailを作成
+
+    // 4. Serviceのモック設定（必要に応じて）
+    //    ※バリデーションで弾かれる場合はServiceが呼ばれないので不要かも
+
+    // 5. ObjectMapperでJavaオブジェクト→JSON文字列に変換
+
+    // 6. MockMvcでPOSTリクエスト実行
+    //    - post("/registerStudent")
+    //    - contentType(APPLICATION_JSON)
+    //    - content(不正なJSON文字列)
+
+    // 7. レスポンス検証
+    //    - status().isBadRequest() ← 400エラーを期待
+    //    - （オプション）jsonPath()でエラーメッセージ確認
+
+    // 8. Serviceメソッド呼び出し確認
+    //    - verify(service, never()).registerStudent(any()) ← 呼ばれないことを確認
+    //    または verify の確認自体をスキップ
+  }
 }
