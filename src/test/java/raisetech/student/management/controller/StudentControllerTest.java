@@ -175,39 +175,61 @@ class StudentControllerTest {
         .andExpect(jsonPath("$.studentsCourseList[0].courseName").value("Javaコース"))
         .andExpect(jsonPath("$.studentsCourseList[0].courseStartAt").value("2025-11-27T00:00:00"))
         .andExpect(jsonPath("$.studentsCourseList[0].courseEndAt").value("2026-11-27T00:00:00"));
-    // 6. レスポンス検証
-    //    - status().isOk() または status().isCreated()
-    //    - jsonPath()でレスポンス内容確認
 
     // 7. Serviceメソッド呼び出し確認（verify）
     verify(service, times(1)).registerStudent(any(StudentDetail.class));
   }
 
   @Test
-  void 受講生登録で不正なデータを送信した時に400エラーが返ること() {
-    // 1. 不正なStudentオブジェクトを作成
-    Student invalidStudent = new Student();
-
-    // 2. StudentCourseリストを作成（正常でもOK）
-
-    // 3. 不正データを含むStudentDetailを作成
-
-    // 4. Serviceのモック設定（必要に応じて）
-    //    ※バリデーションで弾かれる場合はServiceが呼ばれないので不要かも
-
-    // 5. ObjectMapperでJavaオブジェクト→JSON文字列に変換
-
-    // 6. MockMvcでPOSTリクエスト実行
+  void 受講生登録で不正なデータを送信した時に400エラーが返ること() throws Exception {
+    //  MockMvcでPOSTリクエスト実行
     //    - post("/registerStudent")
     //    - contentType(APPLICATION_JSON)
     //    - content(不正なJSON文字列)
+    mockMvc.perform(post("/registerStudent").contentType(MediaType.APPLICATION_JSON)
+            .content("{\"student\":{\"email\":\"不正なメール\"}}"))
+        //  レスポンス検証
+        //    - status().isBadRequest() ← 400エラーを期待
+        //    - （オプション）jsonPath()でエラーメッセージ確認
+        .andExpect(status().isBadRequest());
 
-    // 7. レスポンス検証
-    //    - status().isBadRequest() ← 400エラーを期待
-    //    - （オプション）jsonPath()でエラーメッセージ確認
-
-    // 8. Serviceメソッド呼び出し確認
+    //  Serviceメソッド呼び出し確認
     //    - verify(service, never()).registerStudent(any()) ← 呼ばれないことを確認
     //    または verify の確認自体をスキップ
+  }
+
+  @Test
+  void 受講生更新で適切なデータを送信した時に正常に更新できること() {
+    // 1. 更新用のStudentオブジェクトを作成
+    //    - 既存のIDを設定（例："1"）
+    //    - 更新したい値を設定（name, email, age等）
+
+    // 2. StudentCourseリストを作成
+    //    - 更新対象のコース情報を設定
+    //    - 既存のコースIDも設定
+
+    // 3. 更新用のStudentDetailを作成
+    //    - StudentとStudentCourseリストを組み合わせ
+
+    // 4. Serviceのモック設定
+    //    - updateStudentメソッドは戻り値がvoid
+    //    - doNothing().when(service).updateStudent(any(StudentDetail.class))
+    //    または when().thenReturn()は不要
+
+    // 5. ObjectMapperでJavaオブジェクト→JSON文字列に変換
+    //    - JavaTimeModuleも忘れずに設定
+
+    // 6. MockMvcでPUTリクエスト実行
+    //    - put("/updateStudent")  ← PUTメソッド使用
+    //    - contentType(APPLICATION_JSON)
+    //    - content(JSON文字列)
+
+    // 7. レスポンス検証
+    //    - status().isOk()
+    //    - jsonPath()または単純なテキスト検証
+    //    - 更新成功メッセージの確認
+
+    // 8. Serviceメソッド呼び出し確認
+    //    - verify(service, times(1)).updateStudent(any(StudentDetail.class))
   }
 }
