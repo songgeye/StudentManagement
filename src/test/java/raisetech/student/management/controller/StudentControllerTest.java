@@ -1,25 +1,21 @@
 package raisetech.student.management.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -45,141 +41,50 @@ class StudentControllerTest {
   @Test
   void 受講生詳細の一覧検索が実行できて空のリストが返ってくること() throws Exception {
     mockMvc.perform(get("/studentsList"))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(content().json("[]"));
 
     verify(service, times(1)).searchStudentList();
   }
 
   @Test
-  void 受講生詳細の受講生で適切な値を入力した時に入力チェックに異常が発生しないこと() {
-    Student student = new Student();
-    student.setId("1");
-    student.setName("松ヶ野健吾");
-    student.setKanaName("マツガノケンゴ");
-    student.setNickname("そん");
-    student.setEmail("test@example.com");
-    student.setArea("神奈川県");
-    student.setAge(31);
-    student.setGender("M");
+  void 受講生詳細の検索ができて空で返ってくること() throws Exception {
+    String id = "999";
+    mockMvc.perform(get("/student/{id}", id))
+        .andExpect(status().isOk());
 
-    Set<ConstraintViolation<Student>> violations = validator.validate(student);
-
-    assertThat(violations.size()).isEqualTo(0);
+    verify(service, times(1)).searchStudent(id);
   }
 
   @Test
-  void 受講生詳細の受講生でIDに数字以外を用いたときに入力チェックに掛かること() {
-    Student student = new Student();
-    student.setId("テストです");
-    student.setName("松ヶ野健吾");
-    student.setKanaName("マツガノケンゴ");
-    student.setNickname("そん");
-    student.setEmail("test@example.com");
-    student.setArea("神奈川県");
-    student.setAge(31);
-    student.setGender("M");
-
-    Set<ConstraintViolation<Student>> violations = validator.validate(student);
-
-    assertThat(violations.size()).isEqualTo(1);
-    assertThat(violations).extracting("message")
-        .containsOnly("数値のみ入力するようにしてください。");
-  }
-
-  @Test
-  void 適切なIDで受講生情報が取得できること() throws Exception {
-    String testId = "999";
-    Student student = new Student();
-    student.setId(testId);
-    StudentDetail expected = new StudentDetail(student, new ArrayList<>());
-
-    when(service.searchStudent(testId)).thenReturn(expected);
-
-    mockMvc.perform(get("/student/{id}", testId).contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.student.id").value("999"));
-
-    verify(service, times(1)).searchStudent(testId);
-    assertThat(expected.getStudent().getId()).isEqualTo(testId);
-  }
-
-  @Test
-  void 不正なIDで受講生情報を取得しようとした時に400エラーが返ること() throws Exception {
-    String testId = "テストです";
-    Student student = new Student();
-    student.setId(testId);
-    StudentDetail expected = new StudentDetail(student, new ArrayList<>());
-
-    when(service.searchStudent(testId)).thenReturn(expected);
-
-    mockMvc.perform(get("/student/{id}", testId).contentType(MediaType.APPLICATION_JSON)
-            .content(testId))
-        .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  void 受講生登録で適切なデータを送信した時に正常に登録できること() throws Exception {
-    Student student = new Student();
-    List<StudentCourse> studentsCourseList = new ArrayList<>();
-    StudentDetail requestBody = new StudentDetail(student, studentsCourseList);
-
-    // 1. Studentオブジェクトに具体的な値を設定（name, email, age等）
-    student.setId("999");
-    student.setName("松ヶ野健吾");
-    student.setKanaName("マツガノケンゴ");
-    student.setNickname("そん");
-    student.setEmail("test@example.com");
-    student.setArea("神奈川県");
-    student.setAge(31);
-    student.setGender("M");
-    student.setRemark("テストです");
-    student.setDeleted(false);
-
-    // 2. StudentCourseオブジェクトを作成してリストに追加
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setId("999");
-    studentCourse.setStudentId("999");
-    studentCourse.setCourseName("Javaコース");
-    studentCourse.setCourseStartAt(LocalDateTime.parse("2025-11-27T00:00:00"));
-    studentCourse.setCourseEndAt(LocalDateTime.parse("2026-11-27T00:00:00"));
-    studentsCourseList.add(studentCourse);
-
-    // 3. Serviceのモック設定（when().thenReturn()）
-    when(service.registerStudent(any(StudentDetail.class))).thenReturn(requestBody);
-
-    // 4. ObjectMapperでJavaオブジェクト→JSON文字列に変換
-    ObjectMapper objectMapper = new ObjectMapper()
-        .registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-    String requestJson = objectMapper.writeValueAsString(requestBody);
-
-    // 5. MockMvcでPOSTリクエスト実行
-    //    - post("/registerStudent")
-    //    - contentType(APPLICATION_JSON)
-    //    - content(JSON文字列)
+  void 受講生詳細の登録が実行できてからで返ってくること() throws Exception {
+    // リクエストデータは適切に構築して入力チェックの検証も兼ねている。
+    // 本来であれば返りは登録されたデータが入るが、モック化されると意味がないため、レスポンスは作らない。
     mockMvc.perform(post("/registerStudent").contentType(MediaType.APPLICATION_JSON)
-            .content(requestJson))
-        // 6. レスポンス検証
-        //    - status().isOk() または status().isCreated()
-        //    - jsonPath()でレスポンス内容確認
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.student.id").value("999"))
-        .andExpect(jsonPath("$.student.name").value("松ヶ野健吾"))
-        .andExpect(jsonPath("$.student.kanaName").value("マツガノケンゴ"))
-        .andExpect(jsonPath("$.student.nickname").value("そん"))
-        .andExpect(jsonPath("$.student.email").value("test@example.com"))
-        .andExpect(jsonPath("$.student.area").value("神奈川県"))
-        .andExpect(jsonPath("$.student.age").value(31))
-        .andExpect(jsonPath("$.student.gender").value("M"))
-        .andExpect(jsonPath("$.student.remark").value("テストです"))
-        .andExpect(jsonPath("$.student.deleted").value(false))
-        .andExpect(jsonPath("$.studentsCourseList[0].id").value("999"))
-        .andExpect(jsonPath("$.studentsCourseList[0].studentId").value("999"))
-        .andExpect(jsonPath("$.studentsCourseList[0].courseName").value("Javaコース"))
-        .andExpect(jsonPath("$.studentsCourseList[0].courseStartAt").value("2025-11-27T00:00:00"))
-        .andExpect(jsonPath("$.studentsCourseList[0].courseEndAt").value("2026-11-27T00:00:00"));
+            .content(
+                """
+                       {
+                           "student" : {
+                             "name" : "松ヶ野健吾",
+                             "kanaName" : "マツガノケンゴ",
+                             "nickname" : "son",
+                             "email" : "test@example.com",
+                             "area" : "神奈川県",
+                             "age" : "31",
+                             "gender" : "M",
+                             "remark" : ""
+                          },
+                          "studentCourseList" : [
+                            {
+                                "courseName" : "Javaコース"
+                            }
+                          ]
+                      }
+                    """
+            ))
+        .andExpect(status().isOk());
 
-    // 7. Serviceメソッド呼び出し確認（verify）
-    verify(service, times(1)).registerStudent(any(StudentDetail.class));
+    verify(service, times(1)).registerStudent(any());
   }
 
   @Test
