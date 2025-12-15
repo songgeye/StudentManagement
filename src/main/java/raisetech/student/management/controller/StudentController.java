@@ -189,6 +189,6 @@ public class StudentController {
   })
   @GetMapping("/test-exception")
   public String testException() throws TestException {
-    throw new TestException("テスト例外が発生しました");
+    throw new TestException("このAPIは現在利用できません。古いURLとなっています。");
   }
 }

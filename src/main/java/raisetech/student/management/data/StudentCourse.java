@@ -2,6 +2,7 @@ package raisetech.student.management.data;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -17,9 +18,10 @@ public class StudentCourse {
   @Pattern(regexp = "^\\d+$")
   private String id;
 
-  @Pattern(regexp = "^\\d+$")
+  @Pattern(regexp = "^\\d+")
   private String studentId;
 
+  @NotBlank
   private String courseName;
 
   @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
