@@ -60,4 +60,24 @@ public class StudentConverterTest {
 
     assertThat(studentDetails.size()).isEqualTo(0);
   }
+
+
+  @Test
+  void 受講生詳細の受講生に紐づくコースが存在しない場合_コースリストが空で返ること() {
+    Student student = new Student();
+    student.setId("1");
+
+    List<Student> studentList = List.of(student);
+
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setStudentId("999");
+
+    List<StudentCourse> courseList = List.of(studentCourse);
+
+    List<StudentDetail> studentDetails = converter.convertStudentDetails(studentList, courseList);
+
+    assertThat(studentDetails.size()).isEqualTo(1);
+    assertThat(studentDetails.get(0).getStudent().getId()).isEqualTo("1");
+    assertThat(studentDetails.get(0).getStudentsCourseList().size()).isEqualTo(0);
+  }
 }
