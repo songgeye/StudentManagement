@@ -50,4 +50,14 @@ public class StudentConverterTest {
     assertThat(studentDetails.get(0).getStudentsCourseList().get(1).getCourseName()).isEqualTo(
         "Javaコース");
   }
+
+  @Test
+  void 受講生詳細の受講生リストが空の場合に空のリストが返ること() {
+    List<Student> studentList = List.of();
+    List<StudentCourse> courseList = List.of();
+
+    List<StudentDetail> studentDetails = converter.convertStudentDetails(studentList, courseList);
+
+    assertThat(studentDetails.size()).isEqualTo(0);
+  }
 }
