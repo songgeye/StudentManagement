@@ -1,6 +1,7 @@
 package raisetech.student.management.controller.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -61,6 +62,16 @@ public class StudentConverterTest {
     assertThat(studentDetails.size()).isEqualTo(0);
   }
 
+  @Test
+  void 受講生詳細の受講生にnullを渡すとNullPointerExceptionが発生すること() {
+    List<Student> studentList = null;
+    List<StudentCourse> studentCourses = List.of();
+
+    assertThatThrownBy(() ->
+        converter.convertStudentDetails(studentList, studentCourses)  // ← NullPointerExceptionが発生
+    )
+        .isInstanceOf(NullPointerException.class);
+  }
 
   @Test
   void 受講生詳細の受講生に紐づくコースが存在しない場合にコースリストが空で返ること() {
