@@ -26,21 +26,28 @@ public class StudentConverterTest {
 
     List<Student> studentList = List.of(student);
 
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setId("1");
-    studentCourse.setStudentId("1");
-    studentCourse.setCourseName("WordPressコース");
-    studentCourse.setCourseStartAt(LocalDateTime.parse("2025-12-07T00:00:00"));
-    studentCourse.setCourseEndAt(LocalDateTime.parse("2026-12-07T00:00:00"));
+    StudentCourse firstCourse = new StudentCourse();
+    firstCourse.setStudentId("1");
+    firstCourse.setCourseName("WordPressコース");
+    firstCourse.setCourseStartAt(LocalDateTime.parse("2025-12-07T00:00:00"));
+    firstCourse.setCourseEndAt(LocalDateTime.parse("2026-12-07T00:00:00"));
 
-    List<StudentCourse> courseList = List.of(studentCourse);
+    StudentCourse secondCourse = new StudentCourse();
+    secondCourse.setStudentId("1");
+    secondCourse.setCourseName("Javaコース");
+    secondCourse.setCourseStartAt(LocalDateTime.parse("2025-12-22T00:00:00"));
+    secondCourse.setCourseEndAt(LocalDateTime.parse("2026-12-22T00:00:00"));
+
+    List<StudentCourse> courseList = List.of(firstCourse, secondCourse);
 
     List<StudentDetail> studentDetails = converter.convertStudentDetails(studentList, courseList);
 
     assertThat(studentDetails.size()).isEqualTo(1);
     assertThat(studentDetails.get(0).getStudent().getId()).isEqualTo("1");
-    assertThat(studentDetails.get(0).getStudentsCourseList().size()).isEqualTo(1);
+    assertThat(studentDetails.get(0).getStudentsCourseList().size()).isEqualTo(2);
     assertThat(studentDetails.get(0).getStudentsCourseList().get(0).getCourseName()).isEqualTo(
         "WordPressコース");
+    assertThat(studentDetails.get(0).getStudentsCourseList().get(1).getCourseName()).isEqualTo(
+        "Javaコース");
   }
 }
