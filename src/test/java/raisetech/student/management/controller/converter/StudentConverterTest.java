@@ -63,7 +63,7 @@ public class StudentConverterTest {
 
 
   @Test
-  void 受講生詳細の受講生に紐づくコースが存在しない場合_コースリストが空で返ること() {
+  void 受講生詳細の受講生に紐づくコースが存在しない場合にコースリストが空で返ること() {
     Student student = new Student();
     student.setId("1");
 
