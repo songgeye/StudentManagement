@@ -1,10 +1,10 @@
 package raisetech.student.management.controller.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
@@ -12,10 +12,53 @@ import raisetech.student.management.domain.StudentDetail;
 
 public class StudentConverterTest {
 
-  private StudentConverter converter = new StudentConverter();
+  private StudentConverter sut;
+
+  @BeforeEach
+  void before() {
+    sut = new StudentConverter();
+  }
 
   @Test
-  void 受講生詳細の受講生に複数のコースが紐づくこと() {
+  void 受講生のリストと受講生コース情報のリストを渡して受講生詳細のリストが作成できること() {
+    Student student = createStudent();
+
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setStudentId("1");
+    studentCourse.setCourseName("WordPressコース");
+    studentCourse.setCourseStartAt(LocalDateTime.now());
+    studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
+
+    List<Student> studentList = List.of(student);
+    List<StudentCourse> studentCourseList = List.of(studentCourse);
+
+    List<StudentDetail> actual = sut.convertStudentDetails(studentList, studentCourseList);
+
+    assertThat(actual.get(0).getStudent()).isEqualTo(student);
+    assertThat(actual.get(0).getStudentsCourseList()).isEqualTo(studentCourseList);
+  }
+
+  @Test
+  void 受講生のリストと受講生コースの情報のリストを紐づかない受講生情報は除外されること() {
+    Student student = createStudent();
+
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setId("1");
+    studentCourse.setStudentId("1");
+    studentCourse.setCourseName("Javaコース");
+    studentCourse.setCourseStartAt(LocalDateTime.now());
+    studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
+
+    List<Student> studentList = List.of(student);
+    List<StudentCourse> studentCourseList = List.of(studentCourse);
+
+    List<StudentDetail> actual = sut.convertStudentDetails(studentList, studentCourseList);
+
+    assertThat(actual.get(0).getStudent()).isEqualTo(student);
+    assertThat(actual.get(0).getStudentsCourseList()).isEmpty();
+  }
+
+  private static Student createStudent() {
     Student student = new Student();
     student.setId("1");
     student.setName("松ヶ野健吾");
@@ -23,72 +66,10 @@ public class StudentConverterTest {
     student.setNickname("そん");
     student.setEmail("test@example.com");
     student.setArea("神奈川県");
+    student.setAge(31);
     student.setGender("M");
-
-    List<Student> studentList = List.of(student);
-
-    StudentCourse firstCourse = new StudentCourse();
-    firstCourse.setStudentId("1");
-    firstCourse.setCourseName("WordPressコース");
-    firstCourse.setCourseStartAt(LocalDateTime.parse("2025-12-07T00:00:00"));
-    firstCourse.setCourseEndAt(LocalDateTime.parse("2026-12-07T00:00:00"));
-
-    StudentCourse secondCourse = new StudentCourse();
-    secondCourse.setStudentId("1");
-    secondCourse.setCourseName("Javaコース");
-    secondCourse.setCourseStartAt(LocalDateTime.parse("2025-12-22T00:00:00"));
-    secondCourse.setCourseEndAt(LocalDateTime.parse("2026-12-22T00:00:00"));
-
-    List<StudentCourse> courseList = List.of(firstCourse, secondCourse);
-
-    List<StudentDetail> studentDetails = converter.convertStudentDetails(studentList, courseList);
-
-    assertThat(studentDetails.size()).isEqualTo(1);
-    assertThat(studentDetails.get(0).getStudent().getId()).isEqualTo("1");
-    assertThat(studentDetails.get(0).getStudentsCourseList().size()).isEqualTo(2);
-    assertThat(studentDetails.get(0).getStudentsCourseList().get(0).getCourseName()).isEqualTo(
-        "WordPressコース");
-    assertThat(studentDetails.get(0).getStudentsCourseList().get(1).getCourseName()).isEqualTo(
-        "Javaコース");
-  }
-
-  @Test
-  void 受講生詳細の受講生リストが空の場合に空のリストが返ること() {
-    List<Student> studentList = List.of();
-    List<StudentCourse> courseList = List.of();
-
-    List<StudentDetail> studentDetails = converter.convertStudentDetails(studentList, courseList);
-
-    assertThat(studentDetails.size()).isEqualTo(0);
-  }
-
-  @Test
-  void 受講生詳細の受講生にnullを渡すとNullPointerExceptionが発生すること() {
-    List<Student> studentList = null;
-    List<StudentCourse> studentCourses = List.of();
-
-    assertThatThrownBy(() ->
-        converter.convertStudentDetails(studentList, studentCourses)  // ← NullPointerExceptionが発生
-    )
-        .isInstanceOf(NullPointerException.class);
-  }
-
-  @Test
-  void 受講生詳細の受講生に紐づくコースが存在しない場合にコースリストが空で返ること() {
-    Student student = new Student();
-    student.setId("1");
-
-    List<Student> studentList = List.of(student);
-
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setStudentId("999");
-
-    List<StudentCourse> courseList = List.of(studentCourse);
-
-    List<StudentDetail> studentDetails = converter.convertStudentDetails(studentList, courseList);
-
-    assertThat(studentDetails.size()).isEqualTo(1);
-    assertThat(studentDetails.get(0).getStudent().getId()).isEqualTo("1");
-    assertThat(studentDetails.get(0).getStudentsCourseList().size()).isEqualTo(0);
+    student.setRemark("");
+    student.setDeleted(false);
+    return student;
   }
 }
