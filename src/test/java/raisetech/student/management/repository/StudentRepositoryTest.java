@@ -103,7 +103,7 @@ class StudentRepositoryTest {
     student.setKanaName("マツガノケンゴ");
 
     assertThatThrownBy(() -> sut.registerStudent(student))
-        .isInstanceOf(Exception.class);
+        .isInstanceOf(DataIntegrityViolationException.class);
   }
 
   @Test
@@ -126,7 +126,7 @@ class StudentRepositoryTest {
     StudentCourse studentCourse = new StudentCourse();
 
     assertThatThrownBy(() -> sut.registerStudentCourse(studentCourse))
-        .isInstanceOf(Exception.class);
+        .isInstanceOf(DataIntegrityViolationException.class);
   }
 
   @Test
