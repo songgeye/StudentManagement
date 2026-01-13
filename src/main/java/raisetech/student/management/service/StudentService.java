@@ -92,6 +92,11 @@ public class StudentService {
    */
   @Transactional
   public void updateStudent(StudentDetail studentDetail) {
+    Student existingStudent = repository.searchStudent(studentDetail.getStudent().getId());
+
+    if (existingStudent == null) {
+      throw new NotFoundException("ID: " + studentDetail.getStudent().getId() + " は存在しません。");
+    }
     repository.updateStudent(studentDetail.getStudent());
     //      studentCourse.setStudentId(studentDetail.getStudent().getId()); // 防御的コード
     studentDetail.getStudentsCourseList()
