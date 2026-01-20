@@ -44,7 +44,7 @@ public class StudentService {
    * @param id 受講生ID
    * @return 受講生詳細
    */
-  public StudentDetail searchStudent(String id) {
+  public StudentDetail searchStudent(Long id) {
     Student student = repository.searchStudent(id);
     if (student == null) {
       throw new NotFoundException("IDが未定義です: " + id);
@@ -77,7 +77,7 @@ public class StudentService {
    * @param studentCourse 受講生コース情報
    * @param id            受講生ID
    */
-  void initStudentsCourse(StudentCourse studentCourse, String id) {
+  void initStudentsCourse(StudentCourse studentCourse, Long id) {
     LocalDateTime now = LocalDateTime.now();
 
     studentCourse.setStudentId(id);
