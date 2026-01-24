@@ -36,14 +36,14 @@ class StudentRepositoryTest {
 
   @Test
   void 受講生の検索が行えること() {
-    String id = "1";
+    Long id = 1L;
     Student actual = sut.searchStudent(id);
-    assertThat(actual.getId()).isEqualTo("1");
+    assertThat(actual.getId()).isEqualTo(1L);
   }
 
   @Test
   void 受講生のIDに存在しないIDで検索した時に入力チェックが掛かること() {
-    String id = "999";
+    Long id = 999L;
     Student actual = sut.searchStudent(id);
     assertThat(actual).isNull();
   }
@@ -66,16 +66,16 @@ class StudentRepositoryTest {
 
   @Test
   void 受講生IDに紐づく受講生コース情報の検索が行えること() {
-    String studentId = "1";
+    Long studentId = 1L;
     List<StudentCourse> actual = sut.searchStudentCourse(studentId);
-    assertThat(actual.get(1).getId()).isEqualTo("2");
+    assertThat(actual.get(1).getId()).isEqualTo(2L);
   }
 
   @Test
-  void 受講生IDに空文字を渡した場合に空のリストが返ること() {
-    String studentId = "";
-    assertThatThrownBy(() -> sut.searchStudentCourse(studentId))
-        .isInstanceOf(DataIntegrityViolationException.class);
+  void 存在しない受講生IDの場合はからのリストが返ること() {
+    Long studentId = 999L;
+    List<StudentCourse> actual = sut.searchStudentCourse(studentId);
+    assertThat(actual).isEmpty();
   }
 
   @Test
@@ -109,7 +109,7 @@ class StudentRepositoryTest {
   @Test
   void 受講生コースの登録が行えること() {
     StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setStudentId("1");
+    studentCourse.setStudentId(1L);
     studentCourse.setCourseName("Javaコース");
     studentCourse.setCourseStartAt(LocalDateTime.now());
     studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
@@ -160,7 +160,7 @@ class StudentRepositoryTest {
   @Test
   void 受講生コースの更新が行えること() {
     StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setStudentId("2");
+    studentCourse.setStudentId(2L);
     studentCourse.setCourseName("AWSコース");
     studentCourse.setCourseStartAt(LocalDateTime.now());
     studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));

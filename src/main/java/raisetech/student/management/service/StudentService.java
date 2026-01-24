@@ -45,10 +45,16 @@ public class StudentService {
    * @return 受講生詳細
    */
   public StudentDetail searchStudent(Long id) {
+
+    if (id == null) {
+      throw new IllegalArgumentException("IDは必須項目です");
+    }
+
     Student student = repository.searchStudent(id);
     if (student == null) {
       throw new NotFoundException("IDが未定義です: " + id);
     }
+
     List<StudentCourse> studentCourse = repository.searchStudentCourse(student.getId());
     return new StudentDetail(student, studentCourse);
   }

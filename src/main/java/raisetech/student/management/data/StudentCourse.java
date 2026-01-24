@@ -2,6 +2,7 @@ package raisetech.student.management.data;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -15,8 +16,10 @@ import raisetech.student.management.domain.enumtype.ApplicationStatus;
 @NoArgsConstructor
 public class StudentCourse {
 
+  @Min(value = 1, message = "IDは1以上である必要があります")
   private Long id;
 
+  @Min(value = 1, message = "IDは1以上である必要があります")
   private Long studentId;
 
   @NotBlank

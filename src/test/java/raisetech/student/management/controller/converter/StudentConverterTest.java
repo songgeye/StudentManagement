@@ -10,7 +10,7 @@ import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 
-public class StudentConverterTest {
+class StudentConverterTest {
 
   private StudentConverter sut;
 
@@ -24,7 +24,7 @@ public class StudentConverterTest {
     Student student = createStudent();
 
     StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setStudentId("1");
+    studentCourse.setStudentId(1L);
     studentCourse.setCourseName("WordPressコース");
     studentCourse.setCourseStartAt(LocalDateTime.now());
     studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
@@ -43,8 +43,8 @@ public class StudentConverterTest {
     Student student = createStudent();
 
     StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setId("1");
-    studentCourse.setStudentId("2");
+    studentCourse.setId(1L);
+    studentCourse.setStudentId(2L);
     studentCourse.setCourseName("Javaコース");
     studentCourse.setCourseStartAt(LocalDateTime.now());
     studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
@@ -60,7 +60,7 @@ public class StudentConverterTest {
 
   private static Student createStudent() {
     Student student = new Student();
-    student.setId("1");
+    student.setId(1L);
     student.setName("松ヶ野健吾");
     student.setKanaName("マツガノケンゴ");
     student.setNickname("そん");
