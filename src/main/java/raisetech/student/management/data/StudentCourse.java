@@ -2,8 +2,8 @@ package raisetech.student.management.data;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +16,11 @@ import raisetech.student.management.domain.enumtype.ApplicationStatus;
 @NoArgsConstructor
 public class StudentCourse {
 
-  @Pattern(regexp = "^\\d+$")
-  private String id;
+  @Min(value = 1, message = "IDは1以上である必要があります")
+  private Long id;
 
-  @Pattern(regexp = "^\\d+$")
-  private String studentId;
+  @Min(value = 1, message = "IDは1以上である必要があります")
+  private Long studentId;
 
   @NotBlank
   private String courseName;

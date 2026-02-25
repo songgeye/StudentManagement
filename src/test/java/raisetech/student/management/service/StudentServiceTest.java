@@ -1,6 +1,8 @@
 package raisetech.student.management.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,7 +53,7 @@ class StudentServiceTest {
 
   @Test
   void 受講生詳細の検索_リポジトリの処理が適切に呼び出せていること() {
-    String id = "999";
+    Long id = 999L;
     Student student = new Student();
     student.setId(id);
     when(repository.searchStudent(id)).thenReturn(student);
@@ -59,10 +61,18 @@ class StudentServiceTest {
 
     StudentDetail expected = new StudentDetail(student, new ArrayList<>());
     StudentDetail actual = sut.searchStudent(id);
-    
+
     verify(repository, times(1)).searchStudent(id);
     verify(repository, times(1)).searchStudentCourse(id);
     assertEquals(expected.getStudent().getId(), actual.getStudent().getId());
+  }
+
+  @Test
+  void 受講生IDにnullを渡した場合に例外が発生すること() {
+    assertThatThrownBy(() -> sut.searchStudent(null))
+        .isInstanceOf(IllegalArgumentException.class);
+
+    verify(repository, times(0)).searchStudent(any());
   }
 
   @Test
@@ -80,7 +90,7 @@ class StudentServiceTest {
 
   @Test
   void 受講生詳細の登録_初期化処理が行われていること() {
-    String id = "999";
+    Long id = 999L;
     Student student = new Student();
     student.setId(id);
     StudentCourse studentCourse = new StudentCourse();
@@ -96,12 +106,18 @@ class StudentServiceTest {
   @Test
   void 受講生詳細の更新＿リポジトリの更新メソッドが適切に呼び出されること() {
     Student student = new Student();
+    student.setId(1L);
+
     StudentCourse studentCourse = new StudentCourse();
     List<StudentCourse> studentCourseList = List.of(studentCourse);
+
     StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
+
+    when(repository.searchStudent(1L)).thenReturn(new Student());
 
     sut.updateStudent(studentDetail);
 
+    verify(repository, times(1)).searchStudent(1L);
     verify(repository, times(1)).updateStudent(student);
     verify(repository, times(1)).updateStudentCourse(studentCourse);
   }

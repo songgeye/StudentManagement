@@ -52,6 +52,10 @@ dependencies {
     // APサーバー(Tomcat)
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
+    // Flyway
+    implementation 'org.flywaydb:flyway-core:10.20.0'
+    implementation 'org.flywaydb:flyway-mysql:10.20.0'
+
     // SpringBoot Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 

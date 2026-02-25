@@ -45,7 +45,7 @@ class StudentControllerTest {
 
   @Test
   void 受講生詳細の検索ができて空で返ってくること() throws Exception {
-    String id = "999";
+    Long id = 999L;
     mockMvc.perform(get("/student/{id}", id))
         .andExpect(status().isOk());
 
@@ -66,7 +66,7 @@ class StudentControllerTest {
                              "nickname" : "son",
                              "email" : "test@example.com",
                              "area" : "神奈川県",
-                             "age" : "31",
+                             "age" : 31,
                              "gender" : "M",
                              "remark" : ""
                           },
@@ -91,13 +91,13 @@ class StudentControllerTest {
                 """
                      {
                          "student" : {
-                           "id" : "12",
+                           "id" : 12,
                            "name" : "松ヶ野健吾",
                            "kanaName" : "マツガノケンゴ",
                            "nickname" : "son",
                            "email" : "test@example.com",
                            "area" : "神奈川県",
-                           "age" : "31",
+                           "age" : 31,
                            "gender" : "M",
                            "remark" : ""
                         },
@@ -128,7 +128,7 @@ class StudentControllerTest {
   @Test
   void 受講生詳細の受講生で適切な値を入力した時に入力チェックに異常が発生しないこと() {
     Student student = new Student();
-    student.setId("1");
+    student.setId(1L);
     student.setName("松ヶ野健吾");
     student.setKanaName("マツガノケンゴ");
     student.setNickname("そん");
@@ -142,9 +142,9 @@ class StudentControllerTest {
   }
 
   @Test
-  void 受講生詳細の受講生でIDに数字以外を用いた時に入力チェックが掛かること() {
+  void 受講生詳細の受講生でIDが0の場合に入力チェックが掛かること() {
     Student student = new Student();
-    student.setId("テストです。");
+    student.setId(0L);
     student.setName("松ヶ野健吾");
     student.setKanaName("マツガノケンゴ");
     student.setNickname("そん");
@@ -156,6 +156,6 @@ class StudentControllerTest {
 
     assertThat(violations.size()).isEqualTo(1);
     assertThat(violations).extracting("message")
-        .containsOnly("数値のみ入力するようにしてください。");
+        .containsOnly("IDは1以上である必要があります");
   }
 }

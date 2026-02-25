@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -84,7 +83,7 @@ public class StudentController {
   })
   @GetMapping("/student/{id}")
   public StudentDetail getStudent(
-      @PathVariable @Pattern(regexp = "^\\d+$") String id) {
+      @PathVariable Long id) {
     return service.searchStudent(id);
   }
 
@@ -139,12 +138,12 @@ public class StudentController {
                   @ExampleObject(
                       name = "更新情報の例",
                       summary = "ID指定と更新したい情報を含む例",
-                      value = "{ \"student\": { \"id\": \"1\", \"name\": \"山田太郎\", \"kanaName\": \"ヤマダタロウ\", \"email\": \"updated@example.com\", \"area\": \"大阪\", \"age\": 26, \"gender\": \"男性\", \"isDeleted\": false }, \"studentsCourseList\": [{ \"id\": \"1\", \"studentId\": \"1\", \"courseName\": \"Spring Boot応用\" }] }"
+                      value = "{ \"student\": { \"id\": 1, \"name\": \"山田太郎\", \"kanaName\": \"ヤマダタロウ\", \"email\": \"updated@example.com\", \"area\": \"大阪\", \"age\": 26, \"gender\": \"男性\", \"isDeleted\": false }, \"studentsCourseList\": [{ \"id\": 1, \"studentId\": 1, \"courseName\": \"Spring Boot応用\" }] }"
                   ),
                   @ExampleObject(
                       name = "論理削除の例",
                       summary = "受講生を論理削除する例",
-                      value = "{ \"student\": { \"id\": \"1\", \"name\": \"山田太郎\", \"kanaName\": \"ヤマダタロウ\", \"email\": \"yamada@example.com\", \"area\": \"東京\", \"age\": 25, \"gender\": \"男性\", \"isDeleted\": true }, \"studentsCourseList\": [{ \"id\": \"1\", \"studentId\": \"1\", \"courseName\": \"Spring Boot基礎\" }] }"
+                      value = "{ \"student\": { \"id\": 1, \"name\": \"山田太郎\", \"kanaName\": \"ヤマダタロウ\", \"email\": \"yamada@example.com\", \"area\": \"東京\", \"age\": 25, \"gender\": \"男性\", \"isDeleted\": true }, \"studentsCourseList\": [{ \"id\": 1, \"studentId\": 1, \"courseName\": \"Spring Boot基礎\" }] }"
                   )
               }
           )

@@ -52,6 +52,15 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
   }
 
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<String> handleIllegalArgumentException(
+      IllegalArgumentException ex, HttpServletRequest request) {
+
+    logger.warn("400 BadRequest: {} {} - {}", request.getMethod(), request.getRequestURI(),
+        ex.getMessage());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  }
+
   /**
    * PathVariable などのバリデーションエラー用のハンドラー
    *
